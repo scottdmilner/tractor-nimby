@@ -1,0 +1,15 @@
+[Unit]
+Description=NIMBY manager for Tractor
+Wants=network-online.target
+After=tractor-blade.service
+ 
+[Service]
+Type=simple
+User=nimby
+ExecStartPre=/usr/bin/curl -s 127.0.0.1:9005/blade/status
+ExecStart=/usr/bin/sh -c '/usr/bin/ls /var/run/utmp | /usr/bin/entr -n /usr/bin/nimby-check.sh'
+Restart=on-failure
+RestartSec=10
+ 
+[Install]
+WantedBy=multi-user.target
